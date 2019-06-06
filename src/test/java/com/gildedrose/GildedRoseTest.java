@@ -41,48 +41,48 @@ public class GildedRoseTest {
 
     @Test
     public void agedBrie_IncreasesQuality() {
-        Item[] items = new Item[] { new Item("Aged Brie", 4, 6) };
+        Item[] items = new Item[] { new Item(SpecialItems.AGED_BRIE, 4, 6) };
         GildedRose app = new GildedRose(items);
 
         app.updateQuality();
-        assertEquals("Aged Brie", app.items[0].name);
+        assertEquals(SpecialItems.AGED_BRIE, app.items[0].name);
         assertEquals(7, app.items[0].quality);
         assertEquals(3, app.items[0].sellIn);
 
         for (int i = 0; i < 10; i++) {
             app.updateQuality();
         }
-        assertEquals("Aged Brie", app.items[0].name);
+        assertEquals(SpecialItems.AGED_BRIE, app.items[0].name);
         assertEquals(24, app.items[0].quality);
         assertEquals(-7, app.items[0].sellIn);
     }
 
     @Test
     public void sulfuras_RemainsTheSame() {
-        Item[] items = new Item[] { new Item("Sulfuras, Hand of Ragnaros", 44, 66) };
+        Item[] items = new Item[] { new Item(SpecialItems.SULFURAS, 44, 66) };
         GildedRose app = new GildedRose(items);
 
         app.updateQuality();
-        assertEquals("Sulfuras, Hand of Ragnaros", app.items[0].name);
+        assertEquals(SpecialItems.SULFURAS, app.items[0].name);
         assertEquals(66, app.items[0].quality);
         assertEquals(44, app.items[0].sellIn);
 
         for (int i = 0; i < 10; i++) {
             app.updateQuality();
         }
-        assertEquals("Sulfuras, Hand of Ragnaros", app.items[0].name);
+        assertEquals(SpecialItems.SULFURAS, app.items[0].name);
         assertEquals(66, app.items[0].quality);
         assertEquals(44, app.items[0].sellIn);
     }
 
     @Test
     public void backstagePasses() {
-        Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 12, 8) };
+        Item[] items = new Item[] { new Item(SpecialItems.BACKSTAGE_PASSES, 12, 8) };
         GildedRose app = new GildedRose(items);
 
         app.updateQuality();
         app.updateQuality();
-        assertEquals("Backstage passes to a TAFKAL80ETC concert", app.items[0].name);
+        assertEquals(SpecialItems.BACKSTAGE_PASSES, app.items[0].name);
         assertEquals(10, app.items[0].quality);
         assertEquals(10, app.items[0].sellIn);
 
@@ -90,7 +90,7 @@ public class GildedRoseTest {
         for (int i = 0; i < 5; i++) {
             app.updateQuality();
         }
-        assertEquals("Backstage passes to a TAFKAL80ETC concert", app.items[0].name);
+        assertEquals(SpecialItems.BACKSTAGE_PASSES, app.items[0].name);
         assertEquals(20, app.items[0].quality);
         assertEquals(5, app.items[0].sellIn);
 
@@ -98,13 +98,13 @@ public class GildedRoseTest {
         for (int i = 0; i < 5; i++) {
             app.updateQuality();
         }
-        assertEquals("Backstage passes to a TAFKAL80ETC concert", app.items[0].name);
+        assertEquals(SpecialItems.BACKSTAGE_PASSES, app.items[0].name);
         assertEquals(35, app.items[0].quality);
         assertEquals(0, app.items[0].sellIn);
 
         // quality drops to 0 once expired
         app.updateQuality();
-        assertEquals("Backstage passes to a TAFKAL80ETC concert", app.items[0].name);
+        assertEquals(SpecialItems.BACKSTAGE_PASSES, app.items[0].name);
         assertEquals(0, app.items[0].quality);
         assertEquals(-1, app.items[0].sellIn);
 
@@ -112,8 +112,41 @@ public class GildedRoseTest {
         for (int i = 0; i < 6; i++) {
             app.updateQuality();
         }
-        assertEquals("Backstage passes to a TAFKAL80ETC concert", app.items[0].name);
+        assertEquals(SpecialItems.BACKSTAGE_PASSES, app.items[0].name);
         assertEquals(0, app.items[0].quality);
         assertEquals(-7, app.items[0].sellIn);
     }
+
+
+    // The tests below are not based on the requirements document but on pre-existing behaviour
+
+    @Test
+    public void agedBrie_MaxQuality() {
+        Item[] items = new Item[] { new Item(SpecialItems.AGED_BRIE, 60, 6) };
+        GildedRose app = new GildedRose(items);
+
+        // quality is limited to at most 50
+        for (int i = 0; i < 50; i++) {
+            app.updateQuality();
+        }
+        assertEquals(SpecialItems.AGED_BRIE, app.items[0].name);
+        assertEquals(50, app.items[0].quality);
+        assertEquals(10, app.items[0].sellIn);
+    }
+
+    @Test
+    public void backstagePasses_MaxQuality() {
+        Item[] items = new Item[] { new Item(SpecialItems.BACKSTAGE_PASSES, 60, 6) };
+        GildedRose app = new GildedRose(items);
+
+        // quality is limited to at most 50
+        for (int i = 0; i < 50; i++) {
+            app.updateQuality();
+        }
+        assertEquals(SpecialItems.BACKSTAGE_PASSES, app.items[0].name);
+        assertEquals(50, app.items[0].quality);
+        assertEquals(10, app.items[0].sellIn);
+    }
+
+
 }
