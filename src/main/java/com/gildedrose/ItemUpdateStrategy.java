@@ -10,7 +10,11 @@ public abstract class ItemUpdateStrategy {
             case SpecialItems.BACKSTAGE_PASSES:
                 return backstagePasses;
             default:
-                return normal;
+                if (item.name.startsWith(SpecialItems.CONJURED)) {
+                    return conjured;
+                } else {
+                    return normal;
+                }
         }
     }
 
@@ -42,6 +46,17 @@ public abstract class ItemUpdateStrategy {
                 item.quality -= 1;
             } else {
                 item.quality -= 2;
+            }
+        }
+    };
+
+    private static ItemUpdateStrategy conjured = new ItemUpdateStrategy() {
+        @Override
+        public void updateQuality(Item item) {
+            if (item.sellIn > 0) {
+                item.quality -= 2;
+            } else {
+                item.quality -= 4;
             }
         }
     };

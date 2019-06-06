@@ -40,6 +40,40 @@ public class GildedRoseTest {
     }
 
     @Test
+    public void conjuredItem() {
+        Item[] items = new Item[] { new Item("Conjured foo", 4, 20) };
+        GildedRose app = new GildedRose(items);
+
+        app.updateQuality();
+        assertEquals("Conjured foo", app.items[0].name);
+        assertEquals(18, app.items[0].quality);
+        assertEquals(3, app.items[0].sellIn);
+
+        // decreases quality 1 per day until expired
+        for (int i = 0; i < 3; i++) {
+            app.updateQuality();
+        }
+        assertEquals("Conjured foo", app.items[0].name);
+        assertEquals(12, app.items[0].quality);
+        assertEquals(0, app.items[0].sellIn);
+
+        // decreases quality twice as fast after expiration
+        app.updateQuality();
+        assertEquals("Conjured foo", app.items[0].name);
+        assertEquals(8, app.items[0].quality);
+        assertEquals(-1, app.items[0].sellIn);
+
+        // quality does not decrease below 0
+        for (int i = 0; i < 6; i++) {
+            app.updateQuality();
+        }
+        assertEquals("Conjured foo", app.items[0].name);
+        assertEquals(0, app.items[0].quality);
+        assertEquals(-7, app.items[0].sellIn);
+    }
+
+
+    @Test
     public void agedBrie_IncreasesQuality() {
         Item[] items = new Item[] { new Item(SpecialItems.AGED_BRIE, 4, 6) };
         GildedRose app = new GildedRose(items);
